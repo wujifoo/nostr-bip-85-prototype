@@ -1,0 +1,29 @@
+# Virtual Environment
+venv/
+env/
+.venv/
+.env/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Local development settings
+.env
+.env.local
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+lib/
+bin/
+# Virtual environment configuration
+pyvenv.cfg

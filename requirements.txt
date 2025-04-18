@@ -1,0 +1,10 @@
+nostr==0.0.2
+cryptography==40.0.2
+click==8.1.3
+setuptools>=78.1.0
+secp256k1==0.14.0
+bech32==1.2.0
+ecdsa>=0.13.0
+bip-utils>=2.9.0
+pynostr>=0.5.1
+coincurve>=18.0.0
