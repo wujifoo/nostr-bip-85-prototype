@@ -157,30 +157,30 @@ $ python nostr-derive.py init
 # Alex creates different identities for different contexts
 $ python nostr-derive.py create --label "Developer Identity" --index 1
 # Created developer identity (npub1)
-Public key (npub): npub1mfrwpmfvsuy0ay7hzfl6447vjglpwl2u78paqmwdnwtk0rsha6rsty2j3v
-Private key (nsec): nsec1u38uxjl0xd653rnwfzynxtymgrj647htggv72zl87uyluayh69wqqtvnyv
+Public key (npub): npub1dev...
+Private key (nsec): nsec1dev...
 
 $ python nostr-derive.py create --label "Political Activist" --index 2
 # Created activist identity (npub2)
-Public key (npub): npub19q2j0mhp9n28sxvluxzrrz7stz42cj9p3j8afm03zuza0tsa705qsd6259
-Private key (nsec): nsec1qdtjlt9f8yy9pzkldn2lrlglswkr7c3gvfa5q59knrj8076p0aysnzle7f
+Public key (npub): npub1pol...
+Private key (nsec): nsec1pol...
 
 $ python nostr-derive.py create --label "Health Support Group" --index 3
 # Created health support identity (npub3)
-Public key (npub): npub15mjckfse6rwwfgpvf4qc6u7clvrqyj77wqsupyxuadehmxtqdrvqs08v06
-Private key (nsec): nsec16gyehagzw8j69rvvu5u8zukzf2yfv2xeynsj68f9e2kg3p07384qarj3k0
+Public key (npub): npub1health...
+Private key (nsec): nsec1health...
 
 # Alex can list all identities from keystore
 $ python nostr-derive.py list
 # [Prompts for password]
 Available identities in keystore:
-1. Developer Identity (npub: npub1mfrwpmfvsuy0ay7hzfl6447vjglpwl2u78paqmwdnwtk0rsha6rsty2j3v, index: 1)
-2. Political Activist (npub: npub19q2j0mhp9n28sxvluxzrrz7stz42cj9p3j8afm03zuza0tsa705qsd6259, index: 2)
-3. Health Support Group (npub: npub15mjckfse6rwwfgpvf4qc6u7clvrqyj77wqsupyxuadehmxtqdrvqs08v06, index: 3)
+1. Developer Identity (npub: npub1dev..., index: 1)
+2. Political Activist (npub: npub1pol..., index: 2)
+3. Health Support Group (npub: npub1health..., index: 3)
 
 # If Alex needed to prove that two identities are related (e.g., to transfer reputation)
 # Alex can generate a proof using the simple_proof.py tool:
-$ python simple_proof.py --master-nsec nsec1... --indices 1,2 --output related_identities.json
+$ python simple_proof.py --master-nsec nsec1master... --indices 1,2 --output related_identities.json
 
 # This proof can be shared with trusted parties to verify the relationship
 # without publicly exposing the connection between the identities
@@ -198,34 +198,34 @@ $ python nostr-derive.py init
 
 $ python nostr-derive.py create --label "Designer Identity" --index 3
 # Created designer identity (npub3)
-Public key (npub): npub15mjckfse6rwwfgpvf4qc6u7clvrqyj77wqsupyxuadehmxtqdrvqs08v06
-Private key (nsec): nsec16gyehagzw8j69rvvu5u8zukzf2yfv2xeynsj68f9e2kg3p07384qarj3k0
+Public key (npub): npub1design...
+Private key (nsec): nsec1design...
 
 $ python nostr-derive.py create --label "Programmer Identity" --index 6
 # Created programmer identity (npub6)
-Public key (npub): npub1acgl2hg5pr22r6yjddz6kr8v3nqdjvawetccxm8q4t2shssl7g5suxwcjs
-Private key (nsec): nsec196au33azwglujyw363twx2le4ljzx0kt3sdwm8al3tucxwj2hvusk2jp6z
+Public key (npub): npub1prog...
+Private key (nsec): nsec1prog...
 
 # When a new client asks for proof of reputation, Jian has two options:
 
 # Option 1: Using our simplified proof tool (recommended)
-$ python simple_proof.py --master-nsec nsec1... --indices 3,6 --output reputation-proof.json
+$ python simple_proof.py --master-nsec nsec1master... --indices 3,6 --output reputation-proof.json
 
 # Client receives the proof file and can see that both identities are linked
 # The proof shows both keys are derived from the same master key:
 # {
-#   "master_npub": "npub1qf4akdqtcnw62yxm7x3axem7dhp234tfv0dpy2en2ndfpchxdh9q9dpu3q",
+#   "master_npub": "npub1master...",
 #   "derived_keys": [
 #     {
 #       "index": 3,
-#       "npub": "npub15mjckfse6rwwfgpvf4qc6u7clvrqyj77wqsupyxuadehmxtqdrvqs08v06",
-#       "nsec": "nsec16gyehagzw8j69rvvu5u8zukzf2yfv2xeynsj68f9e2kg3p07384qarj3k0",
+#       "npub": "npub1design...",
+#       "nsec": "nsec1design...",
 #       "key_hash": "..."
 #     },
 #     {
 #       "index": 6,
-#       "npub": "npub1acgl2hg5pr22r6yjddz6kr8v3nqdjvawetccxm8q4t2shssl7g5suxwcjs",
-#       "nsec": "nsec196au33azwglujyw363twx2le4ljzx0kt3sdwm8al3tucxwj2hvusk2jp6z",
+#       "npub": "npub1prog...",
+#       "nsec": "nsec1prog...",
 #       "key_hash": "..."
 #     }
 #   ],
@@ -237,13 +237,13 @@ $ python simple_proof.py --master-nsec nsec1... --indices 3,6 --output reputatio
 $ python nostr-zk-proof.py setup --output-dir ~/.nostr-zk
 
 # Generate a zero-knowledge proof for a single key
-$ python nostr-zk-proof.py prove --master-nsec nsec1cy8pltutzv7jxeukt3wh9579amksjwxwfvl3x2hhx4x0l4l3254qsn466y --derived-npub npub1xtzaegg472f2hyhs5zpxs2yzvv4w2urmx0ptdyhp03hc2rm8rahs03leke --index 6 --output reputation-proof.json
+$ python nostr-zk-proof.py prove --master-nsec nsec1master... --derived-npub npub1prog... --index 6 --output reputation-proof.json
 
 # The client can verify the proof without learning the master private key
 $ python nostr-zk-proof.py verify --proof-file reputation-proof.json
 # Proof verification: 5/5 valid responses (100.0%)
-# The proof successfully demonstrates that the owner of npub1qvpxhke5p0zdmfgsm0c685m80eku92x4d93a5y3txd2d4y8zueku57848y4
-# claims ownership of npub1xtzaegg472f2hyhs5zpxs2yzvv4w2urmx0ptdyhp03hc2rm8rahs03leke with index 6
+# The proof successfully demonstrates that the owner of npub1master...
+# claims ownership of npub1prog... with index 6
 # Proof verification SUCCEEDED
 
 # The ZK proof has several advantages over the simple proof:
@@ -264,14 +264,14 @@ $ python nostr-derive.py init
 
 $ python nostr-derive.py create --label "Main Financial Identity" --index 0
 # Created main identity 
-Public key (npub): npub1qf4akdqtcnw62yxm7x3axem7dhp234tfv0dpy2en2ndfpchxdh9q9dpu3q
+Public key (npub): npub1master...
 
 $ python nostr-derive.py create --label "Pseudonymous Borrower" --index 4
 # Created pseudonymous identity (npub4)
-Public key (npub): npub1jg79sxx82u34zjvpfxfy6pz4a6dx9n0dssq2yc54tj6xfk2lm9hsznf3wk
+Public key (npub): npub1borrow...
 
 # Taylor creates a ZK proof for the loan provider
-$ python nostr-zk-proof.py prove --master-nsec nsec1... --derived-npub npub1jg79sxx82u34zjvpfxfy6pz4a6dx9n0dssq2yc54tj6xfk2lm9hsznf3wk --index 4 --output loan_guarantee.json
+$ python nostr-zk-proof.py prove --master-nsec nsec1master... --derived-npub npub1borrow... --index 4 --output loan_guarantee.json
 
 # The loan provider verifies the proof
 $ python nostr-zk-proof.py verify --proof-file loan_guarantee.json
@@ -288,15 +288,15 @@ $ python nostr-zk-proof.py verify --proof-file loan_guarantee.json
 # Morgan has derived identities for different platforms
 $ python nostr-derive.py create --label "Rideshare Profile" --index 3
 # Created rideshare identity with excellent reputation
-Public key (npub): npub15mjckfse6rwwfgpvf4qc6u7clvrqyj77wqsupyxuadehmxtqdrvqs08v06
+Public key (npub): npub1ride...
 
 $ python nostr-derive.py create --label "Apartment Rental" --index 5
 # Created new rental platform identity
-Public key (npub): npub1acgl2hg5pr22r6yjddz6kr8v3nqdjvawetccxm8q4t2shssl7g5suxwcjs
+Public key (npub): npub1rent...
 
 # Morgan can provide a zero-knowledge proof to the rental platform 
 # to verify the connection to the trusted rideshare account
-$ python nostr-zk-proof.py prove --master-nsec nsec1... --derived-npub npub15mjckfse6rwwfgpvf4qc6u7clvrqyj77wqsupyxuadehmxtqdrvqs08v06 --index 3 --output rideshare_proof.json
+$ python nostr-zk-proof.py prove --master-nsec nsec1master... --derived-npub npub1ride... --index 3 --output rideshare_proof.json
 
 # The rental platform can verify that Morgan's identity is backed by 
 # the same master key that controls the reputable rideshare account
@@ -316,15 +316,15 @@ $ python nostr-derive.py list
 # Riley creates a new identity after the compromise
 $ python nostr-derive.py create --label "New Social Identity" --index 7
 # Created new identity (npub7)
-Public key (npub): npub1agg077tgnyxyjxqsp3zum5u0alahcyp7k4evn9xd9xump9akpsdqaxqfaz
+Public key (npub): npub1new...
 
 # Riley needs to prove to friends and followers that both the compromised 
 # and new identities are controlled by the same person
-$ python simple_proof.py --master-nsec nsec1... --indices 2,7 --output recovery_proof.json
+$ python simple_proof.py --master-nsec nsec1master... --indices 2,7 --output recovery_proof.json
 
 # Riley shares this proof with close contacts privately, or
 # uses the ZK proof for more selective disclosure
-$ python nostr-zk-proof.py prove --master-nsec nsec1... --derived-npub npub1agg077tgnyxyjxqsp3zum5u0alahcyp7k4evn9xd9xump9akpsdqaxqfaz --index 7 --output recovery_zk.json
+$ python nostr-zk-proof.py prove --master-nsec nsec1master... --derived-npub npub1new... --index 7 --output recovery_zk.json
 
 # Contacts can verify the proofs
 $ python nostr-zk-proof.py verify --proof-file recovery_zk.json
@@ -351,8 +351,8 @@ python nostr-derive.py create --label "Primary Identity" --index 0
 python nostr-derive.py create --label "Anonymous Blog" --index 1
 
 # Create proofs as needed
-python simple_proof.py --master-nsec nsec1... --indices 0,1 --output proof.json
-python nostr-zk-proof.py prove --master-nsec nsec1... --derived-npub npub1... --index 1 --output zk_proof.json
+python simple_proof.py --master-nsec nsec1master... --indices 0,1 --output proof.json
+python nostr-zk-proof.py prove --master-nsec nsec1master... --derived-npub npub1blog... --index 1 --output zk_proof.json
 ```
 
 The most transformative aspect is enabling reputation without persistent identity - allowing individuals to maintain privacy while still benefiting from their established reputation when needed. This approach strikes a balance between anonymity and accountability that could help create a more trust-based but privacy-preserving internet.
