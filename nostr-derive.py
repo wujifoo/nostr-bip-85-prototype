@@ -808,37 +808,37 @@ class NostrDerive:
 
 # ====== CLI ======
 
-@click.group()
+@click.group(
+    help="""Nostr Key Derivation tool using BIP-85.
+
+Generate and manage hierarchical Nostr keys from a master key.
+
+WITH STORAGE: Initialize with 'init', create keys with 'create'.
+WITHOUT STORAGE: Use '--nsec' and '--no-store' options directly.
+
+Examples:
+* Create master key:
+  nostr-derive init
+
+* Import existing key:
+  nostr-derive init --nsec nsec1...
+
+* Create derived identity:
+  nostr-derive create --label "Identity" --index 1
+
+* List identities:
+  nostr-derive list
+
+* Export identity:
+  nostr-derive export --label "Identity"
+
+* Derive without storing:
+  nostr-derive create --nsec nsec1... --no-store
+"""
+)
 @click.option('--debug', is_flag=True, help='Enable debug output')
 def cli(debug):
-    """Nostr Key Derivation tool using BIP-85
-    
-    This tool allows you to create and manage multiple Nostr identities derived from a single master key.
-    It uses BIP-85 for deterministic key derivation, which means all your derived identities can be
-    recovered using just your master key and the index number.
-    
-    You can use this tool in two ways:
-    
-    1. WITHOUT STORAGE (pure BIP-85):
-       - Just provide a master nsec and get derived keys without storing anything
-       - Example: nostr-derive create --nsec nsec1... --index 1 --no-store
-       
-    2. WITH ENCRYPTED STORAGE:
-       - Store your master and derived keys in an encrypted keystore
-       - Protect with a password of your choice
-       - Convenient for managing multiple identities
-       
-    Getting started (storage mode):
-      1. Initialize a master key:    nostr-derive init
-         Or import existing nsec:    nostr-derive init --nsec nsec1...
-      2. Create a derived identity:  nostr-derive create --label "My Identity"
-      3. List all identities:        nostr-derive list
-      4. Export an identity:         nostr-derive export --label "My Identity"
-    
-    Getting started (no storage):
-      1. Derive directly:            nostr-derive create --nsec nsec1... --index 1 --no-store
-      2. Re-derive when needed:      nostr-derive export --nsec nsec1... --index 1
-    """
+    """Nostr Key Derivation tool using BIP-85."""
     # Set global debug flag based on command line option
     global DEBUG
     DEBUG = debug
@@ -850,12 +850,12 @@ def cli(debug):
 @click.option("--no-store", is_flag=True, help="Don't store the key (will only display it)")
 def init(force, nsec, no_store):
     """Initialize a new master key or import an existing one.
-    
-    This command will either generate a new master key or import an existing 
-    Nostr private key (nsec) to use as your master key.
-    
-    By default, the master key will be stored in an encrypted keystore file.
-    Use --no-store to skip storing the key and just display it instead.
+
+This command will either generate a new master key or import an existing 
+Nostr private key (nsec) to use as your master key.
+
+By default, the master key will be stored in an encrypted keystore file.
+Use --no-store to skip storing the key and just display it instead.
     """
     if not no_store:
         password = getpass.getpass("Enter password to protect your keystore (optional, leave empty for no keystore): ")
@@ -935,34 +935,34 @@ def init(force, nsec, no_store):
         sys.exit(1)
 
 
-@cli.command()
+@cli.command(
+    short_help="Create a new derived identity from your master key",
+    help="""Create a new derived identity from your master key.
+
+Two ways to use:
+
+* With keystore (requires prior 'init'):
+  nostr-derive create --label "Work Identity" --index 1
+
+* Direct derivation (without storing):
+  nostr-derive create --nsec nsec1... --index 42 --no-store
+
+Additional options:
+
+* Validate the key pair:
+  --validate
+
+* Specify a custom index (default is 0):
+  --index N
+"""
+)
 @click.option("--label", help="Human-readable label for this identity (required when storing)")
 @click.option("--index", type=int, default=0, help="Index for derivation (defaults to 0)")
 @click.option("--nsec", help="Master key to derive from (accepts nsec1..., nsec:HEX, or raw 64-char HEX)")
 @click.option("--no-store", is_flag=True, help="Don't store the derived key (will only display it)")
 @click.option("--validate", is_flag=True, help="Perform additional validation with multiple libraries")
 def create(label, index, nsec, no_store, validate):
-    """Create a new derived identity from your master key.
-    
-    This command creates a new Nostr identity using BIP-85 derivation.
-    
-    You can either:
-    1. Use a master key from the keystore (requires prior 'init')
-    2. Directly provide a master key with --nsec
-    
-    By default, derived keys are stored in the encrypted keystore.
-    Use --no-store to skip storing the key and just display it.
-    
-    Examples:
-      # Using stored master key:
-      nostr-derive create --label "Work Identity" --index 1
-      
-      # Using direct nsec without storage:
-      nostr-derive create --nsec nsec1... --index 42 --no-store
-      
-      # With additional validation:
-      nostr-derive create --nsec nsec1... --index 42 --validate
-    """
+    """Create a new derived identity from your master key."""
     master_key_bytes = None
     
     if nsec:
@@ -1106,16 +1106,16 @@ def create(label, index, nsec, no_store, validate):
 @cli.command()
 def list():
     """List all derived identities stored in your keystore.
-    
-    This command displays all the identities you've stored in your keystore.
-    It shows each identity's label, public key (npub), and index.
-    Private keys are not displayed for security reasons.
-    
-    Note: This command only shows stored identities. Keys derived with --no-store
-    will not appear in this list.
-    
-    Example:
-      nostr-derive list
+
+This command displays all the identities you've stored in your keystore.
+It shows each identity's label, public key (npub), and index.
+Private keys are not displayed for security reasons.
+
+Note: This command only shows stored identities. Keys derived with --no-store
+will not appear in this list.
+
+Example:
+  nostr-derive list
     """
     password = getpass.getpass("Enter keystore password: ")
     
@@ -1147,20 +1147,20 @@ def list():
 @click.option("--index", type=int, help="Index to use when re-deriving from master nsec (required with --nsec)")
 def export(label, show_private, nsec, index):
     """Export a specific identity from your keystore or re-derive it.
-    
-    This command can either:
-    1. Export a stored identity from your keystore by its label
-    2. Re-derive an identity directly from a master nsec
-    
-    By default, it only shows the public key (npub).
-    Use --show-private to also reveal the private key (nsec).
-    
-    Examples:
-      # Export from keystore:
-      nostr-derive export --label "Work Identity"
-      
-      # Re-derive directly:
-      nostr-derive export --nsec nsec1... --index 42 --show-private
+
+This command can either:
+1. Export a stored identity from your keystore by its label
+2. Re-derive an identity directly from a master nsec
+
+By default, it only shows the public key (npub).
+Use --show-private to also reveal the private key (nsec).
+
+Examples:
+  # Export from keystore:
+  nostr-derive export --label "Work Identity"
+  
+  # Re-derive directly:
+  nostr-derive export --nsec nsec1... --index 42 --show-private
     """
     if nsec:
         # Direct derivation without keystore
@@ -1230,21 +1230,21 @@ def export(label, show_private, nsec, index):
 @click.option("--npub", help="Public key to validate against (optional, will be derived if not provided)")
 def validate(nsec, npub):
     """Validate a Nostr key pair using multiple libraries.
-    
-    This command takes a private key (nsec) and optionally a public key (npub)
-    and validates them using multiple libraries and methods.
-    
-    If only the nsec is provided, it will derive the correct npub and validate
-    the derivation with multiple libraries.
-    
-    If both nsec and npub are provided, it will check if they form a valid key pair.
-    
-    Examples:
-      # Validate only nsec (deriving npub):
-      nostr-derive validate --nsec nsec1...
-      
-      # Validate a key pair:
-      nostr-derive validate --nsec nsec1... --npub npub1...
+
+This command takes a private key (nsec) and optionally a public key (npub)
+and validates them using multiple libraries and methods.
+
+If only the nsec is provided, it will derive the correct npub and validate
+the derivation with multiple libraries.
+
+If both nsec and npub are provided, it will check if they form a valid key pair.
+
+Examples:
+  # Validate only nsec (deriving npub):
+  nostr-derive validate --nsec nsec1...
+  
+  # Validate a key pair:
+  nostr-derive validate --nsec nsec1... --npub npub1...
     """
     # Decode private key
     private_key_bytes = decode_nsec(nsec)
