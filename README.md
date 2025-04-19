@@ -15,7 +15,7 @@ What has lacked in social media and identity in general is a simple way to airga
 - Any other context-specific persona
 
 ### So what?
-In Nostr, the solution is multiple unrelated npubs. The "catch" is that the individual can't carry good reputation from one identity to another or link them is some other way at a later time. To do so with 2 or 3 npubs, if they wanted to prove a connection, they can do this with signed Nostr notes textually confirming a relationship (like an affidavit).
+In Nostr, the solution is the user creates multiple unrelated npubs. The "catch" is that the individual can't carry good reputation from one identity to another or link them in some other (constrained) way at a later time. To do so with 2 or 3 npubs, if they wanted to prove a connection, they can do this with signed Nostr notes textually confirming a relationship (like an affidavit).
 
 The fundamental improvement here is moving from a trust-based model ("believe me when I say these accounts are connected") to a verification-based model ("I can mathematically prove these accounts are connected without revealing anything else"). This creates a much stronger foundation for pseudonymous identity systems. Another disadvantage of the attestation posts is: if A attests to B and B attests to C, you've created a public chain connecting all three. The BIP-85 approach exposes no more information than it needs to. 
 
