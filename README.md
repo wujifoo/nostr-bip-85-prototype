@@ -1,21 +1,35 @@
 # Nostr BIP-85 Key Derivation Tool
 
-## Preamble
+## Sovereign Anonymous Identities
 
-One of the earliest memes was !(on the internet nobody knows you're a dog)[https://en.wikipedia.org/wiki/On_the_Internet,_nobody_knows_you're_a_dog]. Online identity privacy commonly (1) degrades to zero in a corporate owned world, (2) bot whackamole.
+One of the earliest memes was [on the internet nobody knows you're a dog](https://en.wikipedia.org/wiki/On_the_Internet,_nobody_knows_you're_a_dog). Online identity privacy commonly (1) degrades to zero in a corporate owned world, (2) bot whackamole.
 
-This experiment for the nostr network allows a user with a master key (nsec) to derive child nsecs that may be used anonymously that can be: (1) recreated by the master, (2) proven to be derived from the master without exposing the master's identity.    
+What has lacked in social media and identity in general is a simple way to airgap identities easily with most systems still tying you back to one email address (and in more recent years) or cell phone number. The latter is very difficult to avoid and even more difficult without KYC. What an individual SHOULD be able to do is have freedom of expression between (for example).
 
-A command-line utility for deterministically deriving multiple Nostr identities from a single master key using BIP-85.
+- A professional "work" identity
+- A personal social media identity
+- A soccer club or hobby-related identity
+- A religious identity
+- Political discussion identity
+- Local community identity
+- Any other context-specific persona
 
-## Overview
+### So what?
+In Nostr, the solution is multiple unrelated npubs. The "catch" is that the individual can't carry good reputation from one identity to another or link them is some other way at a later time. To do so with 2 or 3 npubs, if they wanted to prove a connection, they can do this with signed Nostr notes textually confirming a relationship (like an affidavit).
 
-This tool allows Nostr users to:
+The fundamental improvement here is moving from a trust-based model ("believe me when I say these accounts are connected") to a verification-based model ("I can mathematically prove these accounts are connected without revealing anything else"). This creates a much stronger foundation for pseudonymous identity systems. Another disadvantage of the attestation posts is: if A attests to B and B attests to C, you've created a public chain connecting all three. The BIP-85 approach exposes no more information than it needs to. 
 
-1. Generate a master Nostr key pair
-2. Derive multiple child identities from the master key using BIP-85
-3. Manage these identities securely with encrypted storage
-4. Export keys in Nostr-compatible formats (npub/nsec)
+For a deeper comparison and usecases, see:
+- [USE-CASES.md](USE-CASES.md): Real-world use cases and examples
+- [PROOF-README.md](PROOF-README.md): Complete documentation of the proof tools
+
+### What happens?
+This experiment for the Nostr network allows a user with a master key (nsec) to derive child nsecs that may be used anonymously that can be: (1) recreated by the master, (2) proven to be derived from the master without exposing the master's identity.    
+
+### Project tools
+1. A command-line utility for deterministically deriving multiple Nostr identities from a single master key using BIP-85.
+2. Utilities to provide cryptographic (zero knowledge) proofs of the relationship between Nostr identities.
+
 
 ## Key Features
 
@@ -25,14 +39,20 @@ This tool allows Nostr users to:
    - `simple_proof.py`: Straightforward tool that proves multiple derived keys come from the same master
    - `nostr-zk-proof.py`: Challenge-response verification with zero-knowledge properties
    
-For more details, see:
-- [PROOF-README.md](PROOF-README.md): Complete documentation of the proof tools
-- [USE-CASES.md](USE-CASES.md): Real-world use cases and examples
 
 ## TODO
 
-1. Explore if derived keys can be made with a password for each (like you can with BIP-85) instead of indexes.
+1. Explore if derived keys can be made with a password for each (like you can with BIP-85) instead of indexes.a
+2. If this is useful it could be applied to nsec extensions or apps like amber or nsec.app. I guess it could also be useful directly in a client(?). 
  
+## Derivation Tool Overview
+
+This tool allows Nostr users to:
+
+1. Generate a master Nostr key pair
+2. Derive multiple child identities from the master key using BIP-85
+3. Manage these identities securely with encrypted storage
+4. Export keys in Nostr-compatible formats (npub/nsec)
 
 ## Installation
 

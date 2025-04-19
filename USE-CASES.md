@@ -147,6 +147,9 @@ These tools enable all the use cases described in this document and can be direc
 ## Real-World Examples
 
 ### Contextual Social Circles
+
+Do you remember Google+? They had this funky concept of circles. It was better that how Facebook allows you to post only to certain groups. But this BIP-85 approach allows completely different entities per social circle with a controlled release of additional extra connection.
+
 **Scenario:** Alex is a software developer (npub1), a political activist (npub2), and a member of a support group for a personal health condition (npub3). Alex uses different derived keys for each context, managed by a single master key.
 
 ```bash
@@ -356,3 +359,53 @@ python nostr-zk-proof.py prove --master-nsec nsec1master... --derived-npub npub1
 ```
 
 The most transformative aspect is enabling reputation without persistent identity - allowing individuals to maintain privacy while still benefiting from their established reputation when needed. This approach strikes a balance between anonymity and accountability that could help create a more trust-based but privacy-preserving internet.
+
+
+
+## Advantages of Hierarchical Identity with ZK-Proofs vs. Independent Key Attestation
+
+This document outlines the key advantages of using BIP-85 hierarchical derivation with zero-knowledge proofs for managing multiple pseudonymous identities, compared to the simpler approach of using independently generated keys with cross-attestation.
+
+### 1. Cryptographic Verification vs. Trust-Based Claims
+
+- With independent keys and signed messages, anyone can claim "npub1 and npub2 are controlled by the same person" - there's no cryptographic proof
+- The BIP-85 approach provides mathematical certainty that both keys derive from the same master seed
+- The ZK-proof provides cryptographic verification without revealing the master key
+
+### 2. Selective Proof Capability
+
+- With independent keys, if A attests to B and B attests to C, you've created a public chain connecting all three
+- The hierarchical approach allows proving A and C are related without revealing B or creating any public link
+- You can choose which relationships to reveal on a case-by-case basis
+
+### 3. Key Recovery and Management
+
+- If one key is compromised in the independent model, that identity is lost forever with no recovery mechanism
+- With BIP-85, all identities can be regenerated from the master key
+- Only one backup is needed regardless of how many identities you create
+
+### 4. Impossible to Fake Connections
+
+- In the "signed affidavit" model, identities could falsely claim connections to prestigious identities
+- With the hierarchical approach, it's mathematically impossible to fake a connection - either the keys derive from the same master or they don't
+- Verification is based on cryptographic proof, not claims
+
+### 5. Prevention of Collusion
+
+- Two people could collude with independent keys by sharing private keys to sign false attestations
+- The BIP-85 proof system makes this impossible - you can't fake a derivation relationship
+- Cryptographic proof replaces trust in the authenticity of signed statements
+
+### 6. Scalability of Trust
+
+- With individual identities, each new identity starts with zero reputation
+- The hierarchical approach allows instant verification of new identities through cryptographic proof
+- Reputation can flow between identities without permanent public links
+
+### 7. Temporal Privacy
+
+- Independent attestations create permanent public records linking identities
+- ZK-proofs allow temporary, selective disclosure only when needed
+- No permanent record of the relationship is created on any public ledger
+
+
