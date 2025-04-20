@@ -830,7 +830,7 @@ Examples:
   nostr-derive list
 
 * Export identity:
-  nostr-derive export --label "Identity"
+  nostr-derive export --label "Identity" --show-private
 
 * Derive without storing:
   nostr-derive create --nsec nsec1... --no-store
@@ -976,6 +976,31 @@ def create(label, index, nsec, no_store, validate):
         master_key_bytes = private_key_bytes
         master_key_hex = bytes_to_hex(master_key_bytes)
         
+        # If we're not using --no-store and have a label, we need a password to store the key
+        if not no_store and label:
+            password = getpass.getpass("Enter password to store the derived key: ")
+            if password:
+                confirm = getpass.getpass("Confirm password: ")
+                if password != confirm:
+                    click.echo("Passwords do not match.", err=True)
+                    sys.exit(1)
+                
+                try:
+                    nostr_derive = NostrDerive(password)
+                    
+                    # Check if we need to initialize the keystore with this nsec
+                    if not nostr_derive.has_master_key():
+                        click.echo("Initializing keystore with the provided master key...")
+                        nostr_derive.keystore["master_key"] = master_key_hex
+                        nostr_derive._save_keystore()
+                except Exception as e:
+                    click.echo(f"Error initializing keystore: {e}", err=True)
+                    click.echo("Will continue in no-store mode.", err=True)
+                    no_store = True
+            else:
+                click.echo("No password provided. Will use --no-store mode.", err=True)
+                no_store = True
+        
         # Validate the master key if requested
         if validate:
             try:
@@ -1077,22 +1102,34 @@ def create(label, index, nsec, no_store, validate):
                 click.echo(f"Error during validation: {e}", err=True)
         
         if not no_store and label:
-            # Check if the index is already used
-            used_indices = [key.get("index", 0) for key in nostr_derive.keystore["derived_keys"]]
-            if index in used_indices:
-                click.echo(f"Index {index} is already in use in your keystore.", err=True)
+            # We should have a nostr_derive instance if we're storing
+            if 'nostr_derive' not in locals():
+                click.echo("Error: No keystore access. Cannot store the derived key.", err=True)
+                click.echo("Either provide a password or use --no-store flag.", err=True)
                 sys.exit(1)
                 
-            # Store the derived key
-            nostr_derive.keystore["derived_keys"].append({
-                "label": label,
-                "index": index,
-                "npub": derived_npub,
-                "nsec": derived_nsec,
-            })
-            nostr_derive._save_keystore()
-            click.echo(f"Created and stored new identity \"{label}\" (index: {index})")
-        else:
+            try:
+                # Check if the index is already used
+                used_indices = [key.get("index", 0) for key in nostr_derive.keystore["derived_keys"]]
+                if index in used_indices:
+                    click.echo(f"Index {index} is already in use in your keystore.", err=True)
+                    sys.exit(1)
+                    
+                # Store the derived key
+                nostr_derive.keystore["derived_keys"].append({
+                    "label": label,
+                    "index": index,
+                    "npub": derived_npub,
+                    "nsec": derived_nsec,
+                })
+                nostr_derive._save_keystore()
+                click.echo(f"Created and stored new identity \"{label}\" (index: {index})")
+            except Exception as e:
+                click.echo(f"Error storing key: {e}", err=True)
+                click.echo("Key was generated but could not be stored. Using no-store mode instead.", err=True)
+                no_store = True
+        
+        if no_store:
             click.echo(f"Created new identity (index: {index}, not stored)")
             
         click.echo(f"Public key (npub): {derived_npub}")
