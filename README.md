@@ -42,7 +42,8 @@ This experiment for the Nostr network allows a user with a master key (nsec) to 
 
 ## TODO
 
-1. Explore if derived keys can be made with a password for each (like you can with BIP-85) instead of indexes.a
+1. Explore if derived keys can be made with a password for each (like you can with BIP-85) instead of or as well as indexes.
+2. Refactor into something like bip85.py, cli.py, bech32.py once its proven to be useful and then preparing to be re-usable for other code.
 2. If this is useful it could be applied to nsec extensions or apps like amber or nsec.app. I guess it could also be useful directly in a client(?). 
  
 ## Derivation Tool Overview
@@ -186,6 +187,10 @@ nostr-derive export --nsec nsec1... --index 42 --show-private
 ## License
 
 [MIT License](LICENSE)
+
+## Contact:
+
+nostr:npub1drjyu6ctl8gw00h40vanrlxrgjdwp6u9zwkeh5ee5r8c5dy4lscskjhe2w
 
 ## Contributing
 
